@@ -2,35 +2,37 @@
 require_once 'core/init.php';
 
 if(Input::exists()){
-    $validate = new Validate();
-    $validation = $validate->check($_POST, array(
-        'username' => array(
-            'required' => true,
-            'min' => 2,
-            'max' => 20,
-            'unique' => 'users'    
-        ),
-        'password' => array(
-            'required' => true,
-            'min' => 6,
-        ),
-        'password_again' => array(
-            'required' => true,
-            'matches' => 'password'
-        ),
-        'name' => array(
-            'required' => true,
-            'min' => 2,
-            'max' => 50
-        ),
-    ));
-    
-    if($validation->passed()){
-        echo 'Passed';
-    }
-    else{
-        foreach($validation->errors() as $error){
-            echo $error . "<br />";
+    if(Token::check(Input::get('token'))){
+        $validate = new Validate();
+        $validation = $validate->check($_POST, array(
+            'username' => array(
+                'required' => true,
+                'min' => 2,
+                'max' => 20,
+                'unique' => 'users'    
+            ),
+            'password' => array(
+                'required' => true,
+                'min' => 6,
+            ),
+            'password_again' => array(
+                'required' => true,
+                'matches' => 'password'
+            ),
+            'name' => array(
+                'required' => true,
+                'min' => 2,
+                'max' => 50
+            ),
+        ));
+
+        if($validation->passed()){
+            echo 'Passed';
+        }
+        else{
+            foreach($validation->errors() as $error){
+                echo $error . "<br />";
+            }
         }
     }
 }
@@ -57,6 +59,7 @@ if(Input::exists()){
         <label for="name">Enter your name:</label>
         <input type="text" name="name" id="name" value="<?php echo escape(Input::get('name')); ?>">
     </div>
-    
+    <!-- generira se token -->
+    <input type="hidden" name="token" value="<?php echo Token::generate(); ?>">
     <input type="submit" value="Register">
 </form>
