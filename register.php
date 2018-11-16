@@ -29,7 +29,9 @@ if(Input::exists()){
         echo 'Passed';
     }
     else{
-        print_r($validation->errors());
+        foreach($validation->errors() as $error){
+            echo $error . "<br />";
+        }
     }
 }
 ?>
